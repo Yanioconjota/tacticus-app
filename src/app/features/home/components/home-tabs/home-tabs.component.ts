@@ -11,14 +11,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { JsonPipe } from '@angular/common';
 
-import { AuthService } from '../../core/services/auth.service';
-import { ApiService } from '../../core/services/api.service';
-import { Player } from '../../core/models/player.model';
-import { GuildResponse } from '../../core/models/guild.model';
-import { GuildRaid } from '../../core/models/guild-raid.model';
+import { AuthService } from '../../../../core/services/auth.service';
+import { ApiService } from '../../../../core/services/api.service';
+import { Player } from '../../../../core/models/player.model';
+import { GuildResponse } from '../../../../core/models/guild.model';
+import { GuildRaid } from '../../../../core/models/guild-raid.model';
 
 @Component({
-  selector: 'app-home',
+  selector: 'app-home-tabs',
   standalone: true,
   imports: [
     MatCardModule,
@@ -31,10 +31,10 @@ import { GuildRaid } from '../../core/models/guild-raid.model';
     MatInputModule,
     JsonPipe
   ],
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.scss'
+  templateUrl: './home-tabs.component.html',
+  styleUrl: './home-tabs.component.scss'
 })
-export class HomeComponent {
+export class HomeTabsComponent {
   private authService = inject(AuthService);
   private apiService = inject(ApiService);
   private router = inject(Router);
