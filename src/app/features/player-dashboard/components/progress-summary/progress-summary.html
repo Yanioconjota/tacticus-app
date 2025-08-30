@@ -1,1 +1,13 @@
-<p>progress-summary works!</p>
+<mat-card class="progress-card">
+  <mat-card-header>
+    <mat-card-title>
+      <mat-icon>trending_up</mat-icon>
+      Campaign Progress
+    </mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+    <app-campaigns-grid [campaigns]="progress().campaigns" />
+    <app-tokens-grid [tokensData]="tokensData()" />
+  </mat-card-content>
+</mat-card>

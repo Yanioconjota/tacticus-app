@@ -13,7 +13,7 @@ export const routes: Routes = [
   },
   {
     path: 'home',
-    loadComponent: () => import('./features/home/components/home.component').then(m => m.HomeComponent),
+    loadComponent: () => import('./features/player-dashboard/player-dashboard/player-dashboard').then(m => m.PlayerDashboardComponent),
     canActivate: [authGuard]
   },
   {

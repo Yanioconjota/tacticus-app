@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TokensGrid } from './tokens-grid';
+import { TokensGridComponent } from './tokens-grid';
 
 describe('TokensGrid', () => {
-  let component: TokensGrid;
-  let fixture: ComponentFixture<TokensGrid>;
+  let component: TokensGridComponent;
+  let fixture: ComponentFixture<TokensGridComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TokensGrid]
+      imports: [TokensGridComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(TokensGrid);
+    fixture = TestBed.createComponent(TokensGridComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

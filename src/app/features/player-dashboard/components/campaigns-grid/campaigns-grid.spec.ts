@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CampaignsGrid } from './campaigns-grid';
+import { CampaignsGridComponent } from './campaigns-grid';
 
 describe('CampaignsGrid', () => {
-  let component: CampaignsGrid;
-  let fixture: ComponentFixture<CampaignsGrid>;
+  let component: CampaignsGridComponent;
+  let fixture: ComponentFixture<CampaignsGridComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CampaignsGrid]
+      imports: [CampaignsGridComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(CampaignsGrid);
+    fixture = TestBed.createComponent(CampaignsGridComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,1 +1,11 @@
-<p>campaigns-grid works!</p>
+<div class="campaigns-summary">
+  @for (campaign of campaigns(); track campaign.id) {
+    <div class="campaign-item">
+      <h4>{{ campaign.name }}</h4>
+      <p class="campaign-type">{{ campaign.type }}</p>
+      <div class="campaign-stats">
+        <span>{{ campaign.battles.length }} battles</span>
+      </div>
+    </div>
+  }
+</div>

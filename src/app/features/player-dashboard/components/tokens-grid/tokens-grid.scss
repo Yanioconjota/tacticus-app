@@ -1,0 +1,39 @@
+.tokens-summary {
+  h4 {
+    margin: 0 0 12px 0;
+    font-size: 16px;
+    font-weight: 600;
+  }
+}
+
+.tokens-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.token-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: #f5f5f5;
+  border-radius: 6px;
+
+  mat-icon {
+    color: #666;
+    font-size: 20px;
+    height: 20px;
+    width: 20px;
+  }
+
+  span {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 768px) {
+  .tokens-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,1 +1,19 @@
-<p>top-heroes works!</p>
+<mat-card class="units-card">
+  <mat-card-header>
+    <mat-card-title>
+      <mat-icon>emoji_events</mat-icon>
+      Top Heroes
+    </mat-card-title>
+    <mat-card-subtitle>Your highest level units</mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <div class="units-grid">
+      @for (unit of topUnits(); track unit.id) {
+        <app-hero-card
+          [unit]="unit"
+          [showItems]="true" />
+      }
+    </div>
+  </mat-card-content>
+</mat-card>

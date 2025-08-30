@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, input } from '@angular/core';
+import { Campaign } from '../../../../core/models/player.model';
 
 @Component({
   selector: 'app-campaigns-grid',
@@ -6,6 +7,6 @@ import { Component } from '@angular/core';
   templateUrl: './campaigns-grid.html',
   styleUrl: './campaigns-grid.scss'
 })
-export class CampaignsGrid {
-
+export class CampaignsGridComponent {
+  campaigns = input.required<Campaign[]>();
 }
