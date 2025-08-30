@@ -1,0 +1,35 @@
+.overview-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  margin-bottom: 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+  mat-card-title, mat-card-subtitle {
+    color: white;
+  }
+
+  mat-card-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 20px;
+    font-weight: 600;
+  }
+
+  mat-card-subtitle {
+    margin-top: 4px;
+    font-size: 14px;
+  }
+
+  mat-card-header {
+    margin-bottom: 16px;
+  }
+}
+
+.overview-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}

@@ -1,0 +1,24 @@
+.faction-section {
+  margin-bottom: 24px;
+
+  h3 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 12px 0;
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  .faction-units {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .unit-chip {
+    font-size: 12px;
+    height: 28px;
+    color: white;
+  }
+}

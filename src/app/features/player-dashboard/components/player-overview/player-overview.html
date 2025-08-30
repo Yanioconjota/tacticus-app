@@ -1,0 +1,35 @@
+<mat-card class="overview-card">
+  <mat-card-header>
+    <mat-card-title>
+      <mat-icon>person</mat-icon>
+      {{ playerData().details.name }}
+    </mat-card-title>
+    <mat-card-subtitle>Power Level {{ playerData().details.powerLevel }}</mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <div class="overview-stats">
+      <app-stat-card
+        icon="military_tech"
+        [value]="totalHeroes()"
+        label="Heroes" />
+
+      <app-stat-card
+        icon="calculate"
+        [value]="totalUnitPower()"
+        label="Total Power" />
+
+      @if (inventorySummary(); as inv) {
+        <app-stat-card
+          icon="inventory_2"
+          [value]="inv.items"
+          label="Items" />
+
+        <app-stat-card
+          icon="star"
+          [value]="inv.shards"
+          label="Shards" />
+      }
+    </div>
+  </mat-card-content>
+</mat-card>

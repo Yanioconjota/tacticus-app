@@ -1,0 +1,40 @@
+<div class="unit-card" [style.border-left]="'4px solid ' + factionColor()">
+  <div class="unit-header">
+    <h4>{{ unit().name }}</h4>
+    <mat-chip [style.background-color]="factionColor()" [style.color]="'white'">
+      <span class="text-light">{{ unit().faction }}</span>
+    </mat-chip>
+  </div>
+
+  <div class="unit-stats">
+    <div class="unit-stat">
+      <span class="stat-label">Level</span>
+      <span class="stat-value" [class]="levelClass()">
+        {{ unit().xpLevel }}
+      </span>
+    </div>
+    <div class="unit-stat">
+      <span class="stat-label">Rank</span>
+      <span class="stat-value">{{ unit().rank }}</span>
+    </div>
+    <div class="unit-stat">
+      <span class="stat-label">Shards</span>
+      <span class="stat-value">{{ unit().shards }}</span>
+    </div>
+  </div>
+
+  @if (showItems() && unit().items && unit().items.length > 0) {
+    <div class="unit-items">
+      <span class="items-label">Items:</span>
+      <div class="items-list">
+        @for (item of unit().items; track item.slotId) {
+          <div class="item-chip"
+               [style.background-color]="getRarityColor(item.rarity)"
+               [matTooltip]="item.name + ' (Level ' + item.level + ')'">
+            <span class="text-light">{{ item.level }}</span>
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>
