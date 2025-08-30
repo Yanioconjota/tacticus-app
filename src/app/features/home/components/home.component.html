@@ -1,0 +1,215 @@
+<div class="player-home-container">
+  <!-- Toolbar -->
+  <mat-toolbar color="primary">
+    <mat-icon class="toolbar-icon">games</mat-icon>
+    <span>Tacticus Player Dashboard</span>
+    <span class="toolbar-spacer"></span>
+    <button mat-icon-button (click)="refreshData()" matTooltip="Refresh data" [disabled]="isLoading()">
+      <mat-icon [class.spinning]="isLoading()">refresh</mat-icon>
+    </button>
+    <button mat-icon-button (click)="logout()" matTooltip="Logout">
+      <mat-icon>logout</mat-icon>
+    </button>
+  </mat-toolbar>
+
+  <!-- Loading State -->
+  @if (isLoading()) {
+    <div class="loading-container">
+      <mat-spinner diameter="60"></mat-spinner>
+      <p>Loading player data...</p>
+    </div>
+  }
+
+  <!-- Error State -->
+  @if (errorMessage() && !isLoading()) {
+    <div class="error-container">
+      <mat-card class="error-card">
+        <mat-card-content>
+          <div class="error-content">
+            <mat-icon>error_outline</mat-icon>
+            <div>
+              <h3>Error Loading Data</h3>
+              <p>{{ errorMessage() }}</p>
+              <button mat-raised-button color="primary" (click)="refreshData()">
+                <mat-icon>refresh</mat-icon>
+                Try Again
+              </button>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  }
+
+  <!-- Main Content -->
+  @if (playerData() && !isLoading()) {
+    <div class="content">
+      <!-- Player Overview -->
+      <mat-card class="overview-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>person</mat-icon>
+            {{ playerData()!.player.details.name }}
+          </mat-card-title>
+          <mat-card-subtitle>Power Level {{ playerData()!.player.details.powerLevel }}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="overview-stats">
+            <div class="stat">
+              <mat-icon>military_tech</mat-icon>
+              <span class="stat-value">{{ playerData()!.player.units.length }}</span>
+              <span class="stat-label">Heroes</span>
+            </div>
+            <div class="stat">
+              <mat-icon>calculate</mat-icon>
+              <span class="stat-value">{{ getTotalUnitPower() }}</span>
+              <span class="stat-label">Total Power</span>
+            </div>
+            @if (getInventorySummary(); as inv) {
+              <div class="stat">
+                <mat-icon>inventory_2</mat-icon>
+                <span class="stat-value">{{ inv.items }}</span>
+                <span class="stat-label">Items</span>
+              </div>
+              <div class="stat">
+                <mat-icon>star</mat-icon>
+                <span class="stat-value">{{ inv.shards }}</span>
+                <span class="stat-label">Shards</span>
+              </div>
+            }
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Top Units -->
+      <mat-card class="units-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>emoji_events</mat-icon>
+            Top Heroes
+          </mat-card-title>
+          <mat-card-subtitle>Your highest level units</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="units-grid">
+            @for (unit of getTopUnits(); track unit.id) {
+              <div class="unit-card" [style.border-left]="'4px solid ' + getFactionColor(unit.grandAlliance)">
+                <div class="unit-header">
+                  <h4>{{ unit.name }}</h4>
+                  <mat-chip [style.background-color]="getFactionColor(unit.grandAlliance)" [style.color]="'white'">
+                    <span class="text-white">{{ unit.faction }}</span>
+                  </mat-chip>
+                </div>
+                <div class="unit-stats">
+                  <div class="unit-stat">
+                    <span class="stat-label">Level</span>
+                    <span class="stat-value level-{{ unit.xpLevel >= 35 ? 'high' : unit.xpLevel >= 25 ? 'med' : 'low' }}">
+                      {{ unit.xpLevel }}
+                    </span>
+                  </div>
+                  <div class="unit-stat">
+                    <span class="stat-label">Rank</span>
+                    <span class="stat-value">{{ unit.rank }}</span>
+                  </div>
+                  <div class="unit-stat">
+                    <span class="stat-label">Shards</span>
+                    <span class="stat-value">{{ unit.shards }}</span>
+                  </div>
+                </div>
+                @if (unit.items && unit.items.length > 0) {
+                  <div class="unit-items">
+                    <span class="items-label">Items:</span>
+                    <div class="items-list">
+                      @for (item of unit.items; track item.slotId) {
+                        <div class="item-chip"
+                             [style.background-color]="getRarityColor(item.rarity)"
+                             [matTooltip]="item.name + ' (Level ' + item.level + ')'">
+                          {{ item.level }}
+                        </div>
+                      }
+                    </div>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Units by Faction -->
+      <mat-card class="factions-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>category</mat-icon>
+            Heroes by Faction
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          @for (faction of getUnitsByFaction() | keyvalue; track faction.key) {
+            <div class="faction-section">
+              <h3 [style.color]="getFactionColor(faction.key)">
+                <mat-icon>shield</mat-icon>
+                {{ faction.key }} ({{ faction.value.length }})
+              </h3>
+              <div class="faction-units">
+                @for (unit of faction.value; track unit.id) {
+                  <mat-chip class="unit-chip" [style.background-color]="getFactionColor(faction.key)" [style.color]="'white'">
+                    <span class="text-white">{{ unit.name }} ({{ unit.xpLevel }})</span>
+                  </mat-chip>
+                }
+              </div>
+            </div>
+          }
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Progress Summary -->
+      @if (playerData()!.player.progress; as progress) {
+        <mat-card class="progress-card">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>trending_up</mat-icon>
+              Campaign Progress
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="campaigns-summary">
+              @for (campaign of progress.campaigns; track campaign.id) {
+                <div class="campaign-item">
+                  <h4>{{ campaign.name }}</h4>
+                  <p class="campaign-type">{{ campaign.type }}</p>
+                  <div class="campaign-stats">
+                    <span>{{ campaign.battles.length }} battles</span>
+                  </div>
+                </div>
+              }
+            </div>
+
+            <!-- Tokens Summary -->
+            <div class="tokens-summary">
+              <h4>Current Tokens</h4>
+              <div class="tokens-grid">
+                <div class="token-item">
+                  <mat-icon>sports_martial_arts</mat-icon>
+                  <span>Arena: {{ progress.arena.tokens.current }}/{{ progress.arena.tokens.max }}</span>
+                </div>
+                <div class="token-item">
+                  <mat-icon>shield</mat-icon>
+                  <span>Guild Raid: {{ progress.guildRaid.tokens.current }}/{{ progress.guildRaid.tokens.max }}</span>
+                </div>
+                <div class="token-item">
+                  <mat-icon>waves</mat-icon>
+                  <span>Onslaught: {{ progress.onslaught.tokens.current }}/{{ progress.onslaught.tokens.max }}</span>
+                </div>
+                <div class="token-item">
+                  <mat-icon>build</mat-icon>
+                  <span>Salvage: {{ progress.salvageRun.tokens.current }}/{{ progress.salvageRun.tokens.max }}</span>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      }
+    </div>
+  }
+</div>

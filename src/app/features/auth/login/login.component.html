@@ -42,13 +42,15 @@
             type="submit"
             [disabled]="isLoading() || !apiKey().trim()"
             class="login-button">
-            @if (isLoading()) {
-              <mat-icon>hourglass_empty</mat-icon>
-              <span>Logging in...</span>
-            } @else {
-              <mat-icon>login</mat-icon>
-              <span>Login</span>
-            }
+            <ng-container>
+              @if (isLoading()) {
+                <mat-icon>hourglass_empty</mat-icon>
+                <span>Logging in...</span>
+              } @else {
+                <mat-icon>login</mat-icon>
+                <span>Login</span>
+              }
+            </ng-container>
           </button>
         </div>
       </form>

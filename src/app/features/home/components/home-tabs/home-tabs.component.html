@@ -32,13 +32,15 @@
                   color="primary"
                   (click)="loadPlayer()"
                   [disabled]="playerLoading()">
-                  @if (playerLoading()) {
-                    <mat-spinner diameter="20"></mat-spinner>
-                    <span>Loading...</span>
-                  } @else {
-                    <mat-icon>person</mat-icon>
-                    <span>Load Player Data</span>
-                  }
+                  <ng-container>
+                    @if (playerLoading()) {
+                      <mat-spinner diameter="20"></mat-spinner>
+                      <span>Loading...</span>
+                    } @else {
+                      <mat-icon>person</mat-icon>
+                      <span>Load Player Data</span>
+                    }
+                  </ng-container>
                 </button>
               </div>
 
@@ -75,13 +77,15 @@
                   color="primary"
                   (click)="loadGuild()"
                   [disabled]="guildLoading()">
-                  @if (guildLoading()) {
-                    <mat-spinner diameter="20"></mat-spinner>
-                    <span>Loading...</span>
-                  } @else {
-                    <mat-icon>groups</mat-icon>
-                    <span>Load Guild Data</span>
-                  }
+                  <ng-container>
+                    @if (guildLoading()) {
+                      <mat-spinner diameter="20"></mat-spinner>
+                      <span>Loading...</span>
+                    } @else {
+                      <mat-icon>groups</mat-icon>
+                      <span>Load Guild Data</span>
+                    }
+                  </ng-container>
                 </button>
               </div>
 
@@ -118,13 +122,15 @@
                   color="primary"
                   (click)="loadCurrentRaid()"
                   [disabled]="raidLoading()">
-                  @if (raidLoading()) {
-                    <mat-spinner diameter="20"></mat-spinner>
-                    <span>Loading...</span>
-                  } @else {
-                    <mat-icon>shield</mat-icon>
-                    <span>Load Current Raid</span>
-                  }
+                  <ng-container>
+                    @if (raidLoading()) {
+                      <mat-spinner diameter="20"></mat-spinner>
+                      <span>Loading...</span>
+                    } @else {
+                      <mat-icon>shield</mat-icon>
+                      <span>Load Current Raid</span>
+                    }
+                  </ng-container>
                 </button>
               </div>
 
@@ -173,13 +179,16 @@
                   color="primary"
                   (click)="loadRaidBySeason()"
                   [disabled]="raidSeasonLoading()">
-                  @if (raidSeasonLoading()) {
-                    <mat-spinner diameter="20"></mat-spinner>
-                    <span>Loading...</span>
-                  } @else {
-                    <mat-icon>history</mat-icon>
-                    <span>Load Season {{ selectedSeason() }} Raid</span>
-                  }
+                  <ng-container>
+                    @if (raidSeasonLoading()) {
+                      <mat-spinner diameter="20"></mat-spinner>
+                      <span>Loading...</span>
+                    } @else {
+                      <mat-icon>history</mat-icon>
+                      <span>Load Season {{ selectedSeason() }} Raid</span>
+                    }
+                  </ng-container>
+
                 </button>
               </div>
 
