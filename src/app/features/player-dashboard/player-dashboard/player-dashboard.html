@@ -1,0 +1,45 @@
+<div class="player-dashboard-container">
+  <!-- Toolbar -->
+  <mat-toolbar color="primary">
+    <mat-icon class="toolbar-icon">games</mat-icon>
+    <span>Tacticus Player Dashboard</span>
+    <span class="toolbar-spacer"></span>
+    <button
+      mat-icon-button
+      (click)="refreshData()"
+      matTooltip="Refresh data"
+      [disabled]="isLoading()">
+      <mat-icon [class.spinning]="isLoading()">refresh</mat-icon>
+    </button>
+    <button mat-icon-button (click)="logout()" matTooltip="Logout">
+      <mat-icon>logout</mat-icon>
+    </button>
+  </mat-toolbar>
+
+  <!-- Loading State -->
+  @if (isLoading()) {
+    <app-loading
+      [diameter]="60"
+      message="Loading player data..." />
+  }
+
+  <!-- Error State -->
+  @if (errorMessage() && !isLoading()) {
+    <app-error
+      [message]="errorMessage()!"
+      (retry)="refreshData()" />
+  }
+
+  <!-- Main Content -->
+  @if (playerData() && !isLoading()) {
+    <div class="content">
+      <app-player-overview [playerData]="playerData()!.player" />
+
+      <app-top-heroes [units]="playerData()!.player.units" />
+
+      <app-faction-heroes [units]="playerData()!.player.units" />
+
+      <app-progress-summary [progress]="playerData()!.player.progress" />
+    </div>
+  }
+</div>
