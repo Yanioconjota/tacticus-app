@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { Player } from '../models/player.model';
 import { GuildResponse } from '../models/guild.model';
 import { GuildRaid, ApiError } from '../models/guild-raid.model';
@@ -11,10 +11,10 @@ import { GuildRaid, ApiError } from '../models/guild-raid.model';
 })
 export class ApiService {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = 'https://api.tacticusgame.com/api/v1';
+  private readonly baseUrl = '/api/v1'; // Back to proxy URL
 
   /**
-   * Get information about the player
+   * Gets player information
    */
   getPlayer(): Observable<Player> {
     return this.http.get<Player>(`${this.baseUrl}/player`)
@@ -22,34 +22,67 @@ export class ApiService {
   }
 
   /**
-   * Get information about the guild
+   * Gets guild information
    */
   getGuild(): Observable<GuildResponse> {
-    return this.http.get<GuildResponse>(`${this.baseUrl}/guild`)
-      .pipe(catchError(this.handleError));
+    return this.http.get(`${this.baseUrl}/guild`, {
+      responseType: 'text'
+    }).pipe(
+      map(response => {
+        try {
+          return JSON.parse(response);
+        } catch (e) {
+          console.log('Raw response:', response);
+          throw new Error('Invalid JSON response');
+        }
+      }),
+      catchError(this.handleError)
+    );
   }
 
   /**
-   * Get information about the current raid
+   * Gets current guild raid information
    */
   getCurrentGuildRaid(): Observable<GuildRaid> {
-    return this.http.get<GuildRaid>(`${this.baseUrl}/guildRaid`)
-      .pipe(catchError(this.handleError));
+    return this.http.get(`${this.baseUrl}/guildRaid`, {
+      responseType: 'text'
+    }).pipe(
+      map(response => {
+        try {
+          return JSON.parse(response);
+        } catch (e) {
+          console.log('Raw response:', response);
+          throw new Error('Invalid JSON response');
+        }
+      }),
+      catchError(this.handleError)
+    );
   }
 
   /**
-   * Get information about the raid by season
+   * Gets guild raid information by specific season
    */
   getGuildRaidBySeason(season: number): Observable<GuildRaid> {
-    return this.http.get<GuildRaid>(`${this.baseUrl}/guildRaid/${season}`)
-      .pipe(catchError(this.handleError));
+    return this.http.get(`${this.baseUrl}/guildRaid/${season}`, {
+      responseType: 'text'
+    }).pipe(
+      map(response => {
+        try {
+          return JSON.parse(response);
+        } catch (e) {
+          console.log('Raw response:', response);
+          throw new Error('Invalid JSON response');
+        }
+      }),
+      catchError(this.handleError)
+    );
   }
 
   /**
-   * Handle errors from the API
+   * Handles API errors
    */
   private handleError(error: HttpErrorResponse): Observable<never> {
-    let errorMessage = 'Error desconocido';
+    let errorMessage = 'Unknown error';
 
     if (error.error?.type) {
       switch (error.error.type) {
@@ -66,9 +99,9 @@ export class ApiService {
           errorMessage = 'API error';
       }
     } else if (error.status === 0) {
-      errorMessage = 'Cannot connect to the server';
+      errorMessage = 'Cannot connect to server';
     } else {
-      errorMessage = `Error HTTP ${error.status}: ${error.message}`;
+      errorMessage = `HTTP Error ${error.status}: ${error.message}`;
     }
 
     return throwError(() => new Error(errorMessage));

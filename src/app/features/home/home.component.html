@@ -1,1 +1,205 @@
-<p>home works!</p>
+<div class="home-container">
+  <!-- Toolbar -->
+  <mat-toolbar color="primary">
+    <span>Tacticus API Dashboard</span>
+    <span class="toolbar-spacer"></span>
+    <button mat-icon-button (click)="testRawCall()" matTooltip="Test raw call">
+      <mat-icon>bug_report</mat-icon>
+    </button>
+    <button mat-icon-button (click)="clearAllData()" matTooltip="Clear all data">
+      <mat-icon>refresh</mat-icon>
+    </button>
+    <button mat-icon-button (click)="logout()" matTooltip="Logout">
+      <mat-icon>logout</mat-icon>
+    </button>
+  </mat-toolbar>
+
+  <!-- Main content -->
+  <div class="content">
+    <mat-tab-group>
+      <!-- Player Tab -->
+      <mat-tab label="Player">
+        <div class="tab-content">
+          <mat-card>
+            <mat-card-header>
+              <mat-card-title>Player Information</mat-card-title>
+              <mat-card-subtitle>Get your player data from the API</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="action-section">
+                <button
+                  mat-raised-button
+                  color="primary"
+                  (click)="loadPlayer()"
+                  [disabled]="playerLoading()">
+                  @if (playerLoading()) {
+                    <mat-spinner diameter="20"></mat-spinner>
+                    <span>Loading...</span>
+                  } @else {
+                    <mat-icon>person</mat-icon>
+                    <span>Load Player Data</span>
+                  }
+                </button>
+              </div>
+
+              @if (playerError()) {
+                <div class="error-message">
+                  <mat-icon>error</mat-icon>
+                  <span>{{ playerError() }}</span>
+                </div>
+              }
+
+              @if (playerData()) {
+                <div class="data-section">
+                  <h3>Player Data:</h3>
+                  <pre class="json-display">{{ playerData() | json }}</pre>
+                </div>
+              }
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </mat-tab>
+
+      <!-- Guild Tab -->
+      <mat-tab label="Guild">
+        <div class="tab-content">
+          <mat-card>
+            <mat-card-header>
+              <mat-card-title>Guild Information</mat-card-title>
+              <mat-card-subtitle>Get your guild data from the API</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="action-section">
+                <button
+                  mat-raised-button
+                  color="primary"
+                  (click)="loadGuild()"
+                  [disabled]="guildLoading()">
+                  @if (guildLoading()) {
+                    <mat-spinner diameter="20"></mat-spinner>
+                    <span>Loading...</span>
+                  } @else {
+                    <mat-icon>groups</mat-icon>
+                    <span>Load Guild Data</span>
+                  }
+                </button>
+              </div>
+
+              @if (guildError()) {
+                <div class="error-message">
+                  <mat-icon>error</mat-icon>
+                  <span>{{ guildError() }}</span>
+                </div>
+              }
+
+              @if (guildData()) {
+                <div class="data-section">
+                  <h3>Guild Data:</h3>
+                  <pre class="json-display">{{ guildData() | json }}</pre>
+                </div>
+              }
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </mat-tab>
+
+      <!-- Current Raid Tab -->
+      <mat-tab label="Current Raid">
+        <div class="tab-content">
+          <mat-card>
+            <mat-card-header>
+              <mat-card-title>Current Guild Raid</mat-card-title>
+              <mat-card-subtitle>Get current guild raid information</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="action-section">
+                <button
+                  mat-raised-button
+                  color="primary"
+                  (click)="loadCurrentRaid()"
+                  [disabled]="raidLoading()">
+                  @if (raidLoading()) {
+                    <mat-spinner diameter="20"></mat-spinner>
+                    <span>Loading...</span>
+                  } @else {
+                    <mat-icon>shield</mat-icon>
+                    <span>Load Current Raid</span>
+                  }
+                </button>
+              </div>
+
+              @if (raidError()) {
+                <div class="error-message">
+                  <mat-icon>error</mat-icon>
+                  <span>{{ raidError() }}</span>
+                </div>
+              }
+
+              @if (raidData()) {
+                <div class="data-section">
+                  <h3>Raid Data:</h3>
+                  <pre class="json-display">{{ raidData() | json }}</pre>
+                </div>
+              }
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </mat-tab>
+
+      <!-- Raid by Season Tab -->
+      <mat-tab label="Raid by Season">
+        <div class="tab-content">
+          <mat-card>
+            <mat-card-header>
+              <mat-card-title>Guild Raid by Season</mat-card-title>
+              <mat-card-subtitle>Get guild raid data for a specific season</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="season-input">
+                <mat-form-field appearance="outline">
+                  <mat-label>Season</mat-label>
+                  <input
+                    matInput
+                    type="number"
+                    [value]="selectedSeason()"
+                    (input)="onSeasonChange($any($event.target).value)"
+                    min="0">
+                </mat-form-field>
+              </div>
+
+              <div class="action-section">
+                <button
+                  mat-raised-button
+                  color="primary"
+                  (click)="loadRaidBySeason()"
+                  [disabled]="raidSeasonLoading()">
+                  @if (raidSeasonLoading()) {
+                    <mat-spinner diameter="20"></mat-spinner>
+                    <span>Loading...</span>
+                  } @else {
+                    <mat-icon>history</mat-icon>
+                    <span>Load Season {{ selectedSeason() }} Raid</span>
+                  }
+                </button>
+              </div>
+
+              @if (raidSeasonError()) {
+                <div class="error-message">
+                  <mat-icon>error</mat-icon>
+                  <span>{{ raidSeasonError() }}</span>
+                </div>
+              }
+
+              @if (raidSeasonData()) {
+                <div class="data-section">
+                  <h3>Season {{ selectedSeason() }} Raid Data:</h3>
+                  <pre class="json-display">{{ raidSeasonData() | json }}</pre>
+                </div>
+              }
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>

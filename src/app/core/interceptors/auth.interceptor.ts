@@ -6,11 +6,11 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const apiKey = authService.apiKey;
 
-  // Only add the API key to requests towards the Tacticus API
-  if (req.url.includes('api.tacticusgame.com') && apiKey) {
+  // Add API key to requests to our proxied API endpoints
+  if (req.url.includes('/api/v1') && apiKey) {
     const authReq = req.clone({
       setHeaders: {
-        'X-API-KEY': apiKey // Adjust according to how the API expects the key
+        'X-API-KEY': apiKey // Correct header format from API docs
       }
     });
     return next(authReq);
