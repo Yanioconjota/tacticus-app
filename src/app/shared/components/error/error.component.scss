@@ -1,0 +1,33 @@
+.error-container {
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+
+  .error-card {
+    max-width: 500px;
+    width: 100%;
+  }
+
+  .error-content {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    mat-icon {
+      color: #f44336;
+      font-size: 32px;
+      height: 32px;
+      width: 32px;
+    }
+
+    h3 {
+      margin: 0 0 8px 0;
+      color: #333;
+    }
+
+    p {
+      margin: 0 0 16px 0;
+      color: #666;
+    }
+  }
+}

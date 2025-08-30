@@ -1,0 +1,17 @@
+<div class="faction-section">
+  <h3 [style.color]="factionColor()">
+    <mat-icon>shield</mat-icon>
+    {{ factionName() }} ({{ units().length }})
+  </h3>
+
+  <div class="faction-units">
+    @for (unit of units(); track unit.id) {
+      <mat-chip
+        class="unit-chip"
+        [style.background-color]="factionColor()"
+        [style.color]="'white'">
+        <span class="text-light">{{ unit.name }} ({{ unit.xpLevel }})</span>
+      </mat-chip>
+    }
+  </div>
+</div>

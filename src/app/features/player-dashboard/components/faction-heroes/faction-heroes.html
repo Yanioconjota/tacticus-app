@@ -1,0 +1,17 @@
+<mat-card class="factions-card">
+  <mat-card-header>
+    <mat-card-title>
+      <mat-icon>category</mat-icon>
+      Heroes by Faction
+    </mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+    @for (faction of unitsByFaction() | keyvalue; track faction.key) {
+      <app-faction-section
+        [factionName]="faction.key"
+        [units]="faction.value"
+        [factionColor]="getFactionColor(faction.key)" />
+    }
+  </mat-card-content>
+</mat-card>

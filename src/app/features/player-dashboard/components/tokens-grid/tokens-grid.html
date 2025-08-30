@@ -1,0 +1,24 @@
+<div class="tokens-summary">
+  <h4>Current Tokens</h4>
+  <div class="tokens-grid">
+    <div class="token-item">
+      <mat-icon>sports_martial_arts</mat-icon>
+      <span>Arena: {{ tokensData().arena.tokens.current }}/{{ tokensData().arena.tokens.max }}</span>
+    </div>
+
+    <div class="token-item">
+      <mat-icon>shield</mat-icon>
+      <span>Guild Raid: {{ tokensData().guildRaid.tokens.current }}/{{ tokensData().guildRaid.tokens.max }}</span>
+    </div>
+
+    <div class="token-item">
+      <mat-icon>waves</mat-icon>
+      <span>Onslaught: {{ tokensData().onslaught.tokens.current }}/{{ tokensData().onslaught.tokens.max }}</span>
+    </div>
+
+    <div class="token-item">
+      <mat-icon>build</mat-icon>
+      <span>Salvage: {{ tokensData().salvageRun.tokens.current }}/{{ tokensData().salvageRun.tokens.max }}</span>
+    </div>
+  </div>
+</div>

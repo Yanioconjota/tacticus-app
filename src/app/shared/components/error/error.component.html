@@ -1,1 +1,18 @@
-<p>error works!</p>
+<div class="error-container">
+  <mat-card class="error-card">
+    <mat-card-content>
+      <div class="error-content">
+        <mat-icon>error_outline</mat-icon>
+        <div>
+          <h3>{{ title() }}</h3>
+          <p>{{ message() }}</p>
+          @if (showRetryButton()) {
+            <button mat-raised-button color="primary" (click)="onRetry()">
+              <mat-icon>refresh</mat-icon>
+              {{ retryButtonText() }}
+            </button>
+          }
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
