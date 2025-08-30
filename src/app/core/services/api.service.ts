@@ -25,36 +25,16 @@ export class ApiService {
    * Gets guild information
    */
   getGuild(): Observable<GuildResponse> {
-    return this.http.get(`${this.baseUrl}/guild`, {
-      responseType: 'text'
-    }).pipe(
-      map(response => {
-        try {
-          return JSON.parse(response);
-        } catch (e) {
-          console.log('Raw response:', response);
-          throw new Error('Invalid JSON response');
-        }
-      }),
-      catchError(this.handleError)
-    );
+    const headers = { 'Cache-Control': 'no-cache' };
+    return this.http.get<GuildResponse>(`${this.baseUrl}/guild`, { headers })
+      .pipe(catchError(this.handleError));
   }
 
   /**
    * Gets current guild raid information
    */
   getCurrentGuildRaid(): Observable<GuildRaid> {
-    return this.http.get(`${this.baseUrl}/guildRaid`, {
-      responseType: 'text'
-    }).pipe(
-      map(response => {
-        try {
-          return JSON.parse(response);
-        } catch (e) {
-          console.log('Raw response:', response);
-          throw new Error('Invalid JSON response');
-        }
-      }),
+    return this.http.get<GuildRaid>(`${this.baseUrl}/guildRaid`).pipe(
       catchError(this.handleError)
     );
   }
@@ -63,17 +43,7 @@ export class ApiService {
    * Gets guild raid information by specific season
    */
   getGuildRaidBySeason(season: number): Observable<GuildRaid> {
-    return this.http.get(`${this.baseUrl}/guildRaid/${season}`, {
-      responseType: 'text'
-    }).pipe(
-      map(response => {
-        try {
-          return JSON.parse(response);
-        } catch (e) {
-          console.log('Raw response:', response);
-          throw new Error('Invalid JSON response');
-        }
-      }),
+    return this.http.get<GuildRaid>(`${this.baseUrl}/guildRaid/${season}`).pipe(
       catchError(this.handleError)
     );
   }
