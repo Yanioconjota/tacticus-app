@@ -2,31 +2,64 @@
   <mat-card class="login-card">
     <mat-card-header>
       <mat-card-title>Tacticus API Login</mat-card-title>
-      <mat-card-subtitle>Enter your API key to access the application</mat-card-subtitle>
+      <mat-card-subtitle>Enter your API keys to access the application</mat-card-subtitle>
     </mat-card-header>
 
     <mat-card-content>
       <form (ngSubmit)="onSubmit()" class="login-form">
+        <!-- Player API Key (Required) -->
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>API Key</mat-label>
+          <mat-label>Player API Key</mat-label>
           <input
             matInput
-            [type]="showPassword() ? 'text' : 'password'"
-            [value]="apiKey()"
-            (input)="onApiKeyChange($any($event.target).value)"
-            placeholder="Enter your Tacticus API key"
+            [type]="showPlayerPassword() ? 'text' : 'password'"
+            [value]="playerApiKey()"
+            (input)="onPlayerApiKeyChange($any($event.target).value)"
+            placeholder="Enter your Player API key"
             [disabled]="isLoading()"
             required>
           <button
             mat-icon-button
             matSuffix
             type="button"
-            (click)="togglePasswordVisibility()"
-            [attr.aria-label]="'Hide password'"
-            [attr.aria-pressed]="showPassword()">
-            <mat-icon>{{showPassword() ? 'visibility_off' : 'visibility'}}</mat-icon>
+            (click)="togglePlayerPasswordVisibility()"
+            [attr.aria-label]="'Toggle password visibility'"
+            [attr.aria-pressed]="showPlayerPassword()">
+            <mat-icon>{{showPlayerPassword() ? 'visibility_off' : 'visibility'}}</mat-icon>
           </button>
         </mat-form-field>
+
+        <!-- Officer Access Toggle -->
+        <div class="officer-toggle">
+          <mat-checkbox
+            [checked]="showOfficerField()"
+            (change)="onOfficerFieldToggle()">
+            I have officer access (for guild data)
+          </mat-checkbox>
+        </div>
+
+        <!-- Officer API Key (Optional) -->
+        @if (showOfficerField()) {
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Officer API Key</mat-label>
+            <input
+              matInput
+              [type]="showOfficerPassword() ? 'text' : 'password'"
+              [value]="officerApiKey()"
+              (input)="onOfficerApiKeyChange($any($event.target).value)"
+              placeholder="Enter your Officer API key"
+              [disabled]="isLoading()">
+            <button
+              mat-icon-button
+              matSuffix
+              type="button"
+              (click)="toggleOfficerPasswordVisibility()"
+              [attr.aria-label]="'Toggle password visibility'"
+              [attr.aria-pressed]="showOfficerPassword()">
+              <mat-icon>{{showOfficerPassword() ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+          </mat-form-field>
+        }
 
         @if (errorMessage()) {
           <div class="error-message">
@@ -40,7 +73,7 @@
             mat-raised-button
             color="primary"
             type="submit"
-            [disabled]="isLoading() || !apiKey().trim()"
+            [disabled]="isLoading() || !playerApiKey().trim()"
             class="login-button">
             <ng-container>
               @if (isLoading()) {
@@ -58,7 +91,8 @@
 
     <mat-card-footer>
       <p class="help-text">
-        Get your API key from the Tacticus game settings or official documentation.
+        <strong>Player API Key:</strong> Required for basic player data.<br>
+        <strong>Officer API Key:</strong> Optional, needed for guild and raid data.
       </p>
     </mat-card-footer>
   </mat-card>
