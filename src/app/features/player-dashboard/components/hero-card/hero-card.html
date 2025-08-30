@@ -2,7 +2,7 @@
   <div class="unit-header">
     <h4>{{ unit().name }}</h4>
     <mat-chip [style.background-color]="factionColor()" [style.color]="'white'">
-      {{ unit().faction }}
+      <span class="text-light">{{ unit().faction }}</span>
     </mat-chip>
   </div>
 
@@ -31,7 +31,7 @@
           <div class="item-chip"
                [style.background-color]="getRarityColor(item.rarity)"
                [matTooltip]="item.name + ' (Level ' + item.level + ')'">
-            {{ item.level }}
+            <span class="text-light">{{ item.level }}</span>
           </div>
         }
       </div>
