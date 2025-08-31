@@ -18,17 +18,59 @@
 
    <div class="content">
     <mat-tab-group>
+      <!-- Player Tab -->
       <mat-tab label="Player">
-        <app-player-dashboard [playerData]="playerData()" [isLoading]="isLoading()" [errorMessage]="errorMessage()" [refreshData]="refreshData" />
+        @if (playerData()) {
+          <app-player-dashboard [playerData]="playerData()" [isLoading]="isLoading()" [errorMessage]="errorMessage()" [refreshData]="refreshData" />
+        }
       </mat-tab>
+      <!-- Guild Tab -->
       <mat-tab label="Guild">
-        <app-guild-info [guildData]="guildData()" />
+        @if (guildData()) {
+          <app-guild-info [guildData]="guildData()" />
+        }
       </mat-tab>
+      <!-- Current Raid Tab -->
       <mat-tab label="Current Raid">
-        <app-guild-raid [raidData]="raidData()" />
+        @if (raidData()) {
+          <app-guild-raid [raidData]="raidData()" />
+        }
       </mat-tab>
+      <!-- Raid by Season Tab -->
       <mat-tab label="Raid by Season">
-        <app-guild-raid [raidData]="raidData()" />
+        <div class="season-input">
+          <mat-form-field appearance="outline">
+            <mat-label>Season</mat-label>
+            <input
+              matInput
+              type="number"
+              [value]="selectedSeason()"
+              (input)="onSeasonChange($any($event.target).value)"
+              min="0">
+          </mat-form-field>
+        </div>
+
+        <div class="action-section">
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="loadRaidBySeason()"
+            [disabled]="isLoading()">
+            <ng-container>
+              @if (isLoading()) {
+                <app-loading [diameter]="20" [message]="'Loading...'"></app-loading>
+              } @else {
+                <mat-icon>history</mat-icon>
+                <span>Load Season {{ selectedSeason() }} Raid</span>
+              }
+            </ng-container>
+
+          </button>
+        </div>
+        <!-- Raid by Season Data -->
+        @if (raidSeasonData()) {
+          <app-guild-raid [raidData]="raidSeasonData()" />
+        }
       </mat-tab>
     </mat-tab-group>
 
