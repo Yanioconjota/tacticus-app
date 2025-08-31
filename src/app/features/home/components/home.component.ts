@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal, computed, ViewEncapsulation } from '@angular/core';
 import { PlayerDashboardComponent } from '../../player-dashboard/player-dashboard/player-dashboard';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -40,10 +40,17 @@ export class HomeComponent implements OnInit {
   raidSeasonData = signal<GuildRaid | null>(null);
   selectedSeason = signal(1);
 
+  // Computed signals for API key access
+  hasOfficerAccess = computed(() =>
+    this.authService.hasOfficerAccess()
+  );
+
   ngOnInit(): void {
     this.loadPlayerData();
-    this.loadGuildData();
-    this.loadRaidData();
+    if (this.hasOfficerAccess()) {
+      this.loadGuildData();
+      this.loadRaidData();
+    }
   }
 
   /**
