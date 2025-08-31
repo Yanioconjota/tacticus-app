@@ -107,4 +107,12 @@ export class GuildRaidComponent implements AfterViewInit {
   getObjectKeys(obj: Record<string, any>): string[] {
     return Object.keys(obj);
   }
+
+  // Convert timestamp to date for display
+  formatTimestamp(timestamp: string | number): Date {
+    // If it's a string that looks like a timestamp, convert to number
+    const numTimestamp = typeof timestamp === 'string' ? parseInt(timestamp, 10) : timestamp;
+    // Convert Unix timestamp (seconds) to milliseconds for JavaScript Date
+    return new Date(numTimestamp * 1000);
+  }
 }

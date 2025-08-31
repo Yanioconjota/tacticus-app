@@ -4,7 +4,7 @@
   gap: 24px;
   padding: 16px;
 
-  .guild-overview, .members-stats {
+  .guild-overview, .members-stats, .members-table {
     mat-card-header {
       mat-card-title {
         display: flex;
@@ -130,6 +130,59 @@
             color: #1976d2;
           }
         }
+      }
+    }
+  }
+
+  .members-table {
+    .table-container {
+      overflow-x: auto;
+      
+      .members-table-content {
+        width: 100%;
+        min-width: 600px;
+        
+        .mat-column-name {
+          flex: 2;
+          min-width: 150px;
+        }
+        
+        .mat-column-level {
+          flex: 1;
+          min-width: 80px;
+          text-align: center;
+        }
+        
+        .mat-column-role {
+          flex: 1.5;
+          min-width: 120px;
+        }
+        
+        .mat-column-lastActivityOn {
+          flex: 2;
+          min-width: 160px;
+        }
+        
+        th {
+          font-weight: 600;
+          color: var(--mdc-theme-primary, #1976d2);
+        }
+        
+        td {
+          padding: 12px 8px;
+        }
+        
+        mat-chip {
+          font-size: 12px;
+          font-weight: 500;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+      }
+      
+      mat-paginator {
+        border-top: 1px solid var(--mdc-theme-outline, #e0e0e0);
+        background: transparent;
       }
     }
   }

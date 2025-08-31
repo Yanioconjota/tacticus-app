@@ -126,7 +126,7 @@ export interface Guild {
 
 export interface GuildMember {
   userId: string;
-  role: 'LEADER' | 'OFFICER' | 'MEMBER';
+  role: 'LEADER' | 'OFFICER' | 'MEMBER' | 'CO_LEADER';
   level: number;
-  lastActivityOn: string;
+  lastActivityOn: number;
 }
