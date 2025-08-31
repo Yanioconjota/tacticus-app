@@ -4,44 +4,85 @@ import { Injectable, signal, computed } from '@angular/core';
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly STORAGE_KEY = 'tacticus_api_key';
+  private readonly PLAYER_API_KEY = 'tacticus_player_api_key';
+  private readonly OFFICER_API_KEY = 'tacticus_officer_api_key';
 
-  private apiKeySignal = signal<string | null>(null);
-  isAuthenticated = computed(() => !!this.apiKeySignal());
+  // Signals for both API keys
+  private playerApiKeySignal = signal<string | null>(null);
+  private officerApiKeySignal = signal<string | null>(null);
 
+  // Computed signals for authentication state
+  isAuthenticated = computed(() => !!this.playerApiKeySignal());
+  hasOfficerAccess = computed(() => !!this.officerApiKeySignal());
+
+  // Getters for API keys
+  get playerApiKey(): string | null {
+    return this.playerApiKeySignal();
+  }
+
+  get officerApiKey(): string | null {
+    return this.officerApiKeySignal();
+  }
+
+  // Backward compatibility - returns player API key by default
   get apiKey(): string | null {
-    return this.apiKeySignal();
+    return this.playerApiKeySignal();
   }
 
   constructor() {
-    this.loadApiKeyFromStorage();
+    this.loadApiKeysFromStorage();
   }
 
   /**
-   * Set the API key and save it to localStorage
+   * Set the player API key and save it to localStorage
    */
-  setApiKey(apiKey: string): void {
+  setPlayerApiKey(apiKey: string): void {
     if (apiKey.trim()) {
-      this.apiKeySignal.set(apiKey.trim());
-      localStorage.setItem(this.STORAGE_KEY, apiKey.trim());
+      this.playerApiKeySignal.set(apiKey.trim());
+      localStorage.setItem(this.PLAYER_API_KEY, apiKey.trim());
     }
   }
 
   /**
-   * Delete the API key and clear the localStorage
+   * Set the officer API key and save it to localStorage
    */
-  logout(): void {
-    this.apiKeySignal.set(null);
-    localStorage.removeItem(this.STORAGE_KEY);
+  setOfficerApiKey(apiKey: string): void {
+    if (apiKey.trim()) {
+      this.officerApiKeySignal.set(apiKey.trim());
+      localStorage.setItem(this.OFFICER_API_KEY, apiKey.trim());
+    }
   }
 
   /**
-   * Load the API key from localStorage
+   * Backward compatibility - sets player API key
    */
-  private loadApiKeyFromStorage(): void {
-    const storedApiKey = localStorage.getItem(this.STORAGE_KEY);
-    if (storedApiKey) {
-      this.apiKeySignal.set(storedApiKey);
+  setApiKey(apiKey: string): void {
+    this.setPlayerApiKey(apiKey);
+  }
+
+  /**
+   * Delete both API keys and clear the localStorage
+   */
+  logout(): void {
+    this.playerApiKeySignal.set(null);
+    this.officerApiKeySignal.set(null);
+    localStorage.removeItem(this.PLAYER_API_KEY);
+    localStorage.removeItem(this.OFFICER_API_KEY);
+  }
+
+  /**
+   * Load both API keys from localStorage
+   */
+  private loadApiKeysFromStorage(): void {
+    const storedPlayerApiKey = localStorage.getItem(this.PLAYER_API_KEY);
+    const storedOfficerApiKey = localStorage.getItem(this.OFFICER_API_KEY);
+
+    if (storedPlayerApiKey) {
+      this.playerApiKeySignal.set(storedPlayerApiKey);
+    }
+
+    if (storedOfficerApiKey) {
+      this.officerApiKeySignal.set(storedOfficerApiKey);
     }
   }
 
