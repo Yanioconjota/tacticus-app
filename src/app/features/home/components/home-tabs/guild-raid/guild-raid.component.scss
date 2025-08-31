@@ -162,28 +162,36 @@
   }
 
   .entries-table {
-    .entries-table-data {
+    .table-container {
       width: 100%;
+      
+      .entries-table-data {
+        width: 100%;
 
-      .tier-badge {
-        background: var(--mdc-theme-primary, #1976d2);
-        color: white;
-        padding: 4px 8px;
-        border-radius: 4px;
-        font-size: 12px;
-        font-weight: 500;
+        .tier-badge {
+          background: var(--mdc-theme-primary, #1976d2);
+          color: white;
+          padding: 4px 8px;
+          border-radius: 4px;
+          font-size: 12px;
+          font-weight: 500;
+        }
+
+        mat-chip {
+          font-size: 12px;
+        }
+
+        th {
+          font-weight: 600;
+        }
+
+        td, th {
+          padding: 12px 8px;
+        }
       }
 
-      mat-chip {
-        font-size: 12px;
-      }
-
-      th {
-        font-weight: 600;
-      }
-
-      td, th {
-        padding: 12px 8px;
+      mat-paginator {
+        border-top: 1px solid var(--mdc-theme-outline, rgba(0, 0, 0, 0.12));
       }
     }
   }

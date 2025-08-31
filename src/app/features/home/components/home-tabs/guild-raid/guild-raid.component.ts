@@ -1,21 +1,39 @@
-import { Component, input, computed } from '@angular/core';
+import { Component, input, computed, ViewChild, AfterViewInit, effect } from '@angular/core';
 import { GuildRaid, RaidEntry } from '../../../../../core/models/guild-raid.model';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
-import { MatTableModule } from '@angular/material/table';
+import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-guild-raid',
-  imports: [DatePipe, DecimalPipe, MatCardModule, MatTableModule, MatChipsModule, MatIconModule, MatDividerModule, MatProgressBarModule],
+  imports: [DatePipe, DecimalPipe, MatCardModule, MatTableModule, MatChipsModule, MatIconModule, MatDividerModule, MatProgressBarModule, MatPaginatorModule],
   templateUrl: './guild-raid.component.html',
   styleUrl: './guild-raid.component.scss'
 })
-export class GuildRaidComponent {
+export class GuildRaidComponent implements AfterViewInit {
   raidData = input<GuildRaid | null>(null);
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+
+  // Table data source for pagination
+  dataSource = new MatTableDataSource<RaidEntry>();
+
+  constructor() {
+    // Update data source when raid data changes
+    effect(() => {
+      const entries = this.raidData()?.entries || [];
+      this.dataSource.data = entries;
+    });
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+  }
 
   // Computed statistics for raid overview
   raidStats = computed(() => {
