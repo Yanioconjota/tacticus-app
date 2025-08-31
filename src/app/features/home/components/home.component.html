@@ -1,1 +1,36 @@
-<app-player-dashboard />
+ <div class="main-container">
+   <!-- Toolbar -->
+   <mat-toolbar color="primary">
+    <mat-icon class="toolbar-icon">games</mat-icon>
+    <span>Tacticus Player Dashboard</span>
+    <span class="toolbar-spacer"></span>
+    <button
+      mat-icon-button
+      (click)="refreshData()"
+      matTooltip="Refresh data"
+      [disabled]="isLoading()">
+      <mat-icon [class.spinning]="isLoading()">refresh</mat-icon>
+    </button>
+    <button mat-icon-button (click)="logout()" matTooltip="Logout">
+      <mat-icon>logout</mat-icon>
+    </button>
+   </mat-toolbar>
+
+   <div class="content">
+    <mat-tab-group>
+      <mat-tab label="Player">
+        <app-player-dashboard [playerData]="playerData()" [isLoading]="isLoading()" [errorMessage]="errorMessage()" [refreshData]="refreshData" />
+      </mat-tab>
+      <mat-tab label="Guild">
+        <div>Guild Data</div>
+      </mat-tab>
+      <mat-tab label="Current Raid">
+        <div>Current Raid Data</div>
+      </mat-tab>
+      <mat-tab label="Raid by Season">
+        <div>Raid by Season Data</div>
+      </mat-tab>
+    </mat-tab-group>
+
+   </div>
+ </div>
