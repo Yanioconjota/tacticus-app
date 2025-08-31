@@ -1,4 +1,89 @@
-<div class="data-section">
-  <h3>Guild Data:</h3>
-  <pre class="json-display">{{ guildData() | json }}</pre>
-</div>
+@if (guildData()?.guild; as guild) {
+  <div class="guild-container">
+    <!-- Guild Overview Card -->
+    <mat-card class="guild-overview">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>groups</mat-icon>
+          {{ guild.name }}
+        </mat-card-title>
+        <mat-card-subtitle>
+          Tag: {{ guild.guildTag }} • Level {{ guild.level }}
+        </mat-card-subtitle>
+      </mat-card-header>
+      
+      <mat-card-content>
+        <div class="guild-stats">
+          <div class="stat-item">
+            <span class="stat-label">Guild ID</span>
+            <span class="stat-value">{{ guild.guildId }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Raid Seasons</span>
+            <div class="seasons-chips">
+              @for (season of guild.guildRaidSeasons; track season) {
+                <mat-chip>Season {{ season }}</mat-chip>
+              }
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Members Statistics -->
+    @if (memberStats(); as stats) {
+      <mat-card class="members-stats">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>people</mat-icon>
+            Members Overview
+          </mat-card-title>
+        </mat-card-header>
+        
+        <mat-card-content>
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-number">{{ stats.totalMembers }}</div>
+              <div class="stat-label">Total Members</div>
+            </div>
+            
+            <div class="stat-card">
+              <div class="stat-number">{{ activeMembers() }}</div>
+              <div class="stat-label">Active (7 days)</div>
+            </div>
+            
+            <div class="stat-card">
+              <div class="stat-number">{{ averageLevel() }}</div>
+              <div class="stat-label">Average Level</div>
+            </div>
+          </div>
+          
+          <mat-divider></mat-divider>
+          
+          <div class="role-distribution">
+            <h4>Role Distribution</h4>
+            <div class="roles-grid">
+              <div class="role-item leader">
+                <mat-icon>star</mat-icon>
+                <span>Leaders: {{ stats.leaders }}</span>
+              </div>
+              <div class="role-item officer">
+                <mat-icon>shield</mat-icon>
+                <span>Officers: {{ stats.officers }}</span>
+              </div>
+              <div class="role-item member">
+                <mat-icon>person</mat-icon>
+                <span>Members: {{ stats.members }}</span>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    }
+  </div>
+} @else {
+  <div class="no-data">
+    <mat-icon>info</mat-icon>
+    <p>No guild data available</p>
+  </div>
+}

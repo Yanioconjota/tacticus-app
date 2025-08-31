@@ -1,4 +1,194 @@
-<div class="data-section">
-  <h3>Raid Data:</h3>
-  <pre class="json-display">{{ raidData() | json }}</pre>
-</div>
+@if (raidData(); as raid) {
+  <div class="raid-container">
+    <!-- Raid Overview -->
+    <mat-card class="raid-overview">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>shield</mat-icon>
+          Guild Raid Season {{ raid.season }}
+        </mat-card-title>
+        <mat-card-subtitle>
+          Config ID: {{ raid.seasonConfigId }}
+        </mat-card-subtitle>
+      </mat-card-header>
+
+      @if (raidStats(); as stats) {
+        <mat-card-content>
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-number">{{ stats.totalEntries }}</div>
+              <div class="stat-label">Total Entries</div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-number">{{ stats.uniqueUsers }}</div>
+              <div class="stat-label">Active Raiders</div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-number">{{ stats.totalDamage | number:'1.0-0' }}</div>
+              <div class="stat-label">Total Damage</div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-number">{{ stats.averageDamage | number:'1.0-0' }}</div>
+              <div class="stat-label">Average Damage</div>
+            </div>
+          </div>
+        </mat-card-content>
+      }
+    </mat-card>
+
+    <!-- Tier Distribution -->
+    @if (raidStats(); as stats) {
+      <mat-card class="tier-distribution">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>bar_chart</mat-icon>
+            Tier Distribution
+          </mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content>
+          <div class="tier-grid">
+            @for (tier of getObjectKeys(stats.tierStats); track tier) {
+              <div class="tier-item">
+                <div class="tier-badge">T{{ tier }}</div>
+                <div class="tier-count">{{ stats.tierStats[+tier] }} entries</div>
+              </div>
+            }
+          </div>
+        </mat-card-content>
+      </mat-card>
+    }
+
+    <!-- Rarity Distribution -->
+    @if (rarityStats(); as rarities) {
+      <mat-card class="rarity-distribution">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>star</mat-icon>
+            Rarity Distribution
+          </mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content>
+          <div class="rarity-grid">
+            @for (rarity of getObjectKeys(rarities); track rarity) {
+              <mat-chip [style.background-color]="getRarityColor(rarity)" [style.color]="'white'">
+                <span class="text-light">{{ rarity }}: {{ rarities[rarity] }}</span>
+              </mat-chip>
+            }
+          </div>
+        </mat-card-content>
+      </mat-card>
+    }
+
+    <!-- Top Damage Dealers -->
+    @if (topDamageEntries().length > 0) {
+      <mat-card class="top-damage">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>trending_up</mat-icon>
+            Top Damage Dealers
+          </mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content>
+          <div class="top-entries">
+            @for (entry of topDamageEntries(); track entry.userId + entry.tier; let i = $index) {
+              <div class="entry-item">
+                <div class="entry-rank">#{{ i + 1 }}</div>
+                <div class="entry-details">
+                  <div class="entry-user">{{ entry.userId }}</div>
+                  <div class="entry-info">
+                    <span class="tier-badge">T{{ entry.tier }}</span>
+                    <mat-chip [style.background-color]="getRarityColor(entry.rarity)" [style.color]="'white'">
+                      <span class="text-light">{{ entry.rarity }}</span>
+                    </mat-chip>
+                  </div>
+                </div>
+                <div class="entry-damage">
+                  <div class="damage-number">{{ entry.damageDealt | number:'1.0-0' }}</div>
+                  <mat-progress-bar
+                    mode="determinate"
+                    [value]="getDamagePercentage(entry)"
+                    class="damage-progress">
+                  </mat-progress-bar>
+                </div>
+              </div>
+            }
+          </div>
+        </mat-card-content>
+      </mat-card>
+    }
+
+    <!-- All Entries Table -->
+    <mat-card class="entries-table">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>table_view</mat-icon>
+          All Raid Entries
+        </mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        <table mat-table [dataSource]="raid.entries" class="entries-table-data">
+          <!-- Tier Column -->
+          <ng-container matColumnDef="tier">
+            <th mat-header-cell *matHeaderCellDef>Tier</th>
+            <td mat-cell *matCellDef="let entry">
+              <span class="tier-badge">T{{ entry.tier }}</span>
+            </td>
+          </ng-container>
+
+          <!-- User ID Column -->
+          <ng-container matColumnDef="userId">
+            <th mat-header-cell *matHeaderCellDef>User</th>
+            <td mat-cell *matCellDef="let entry">{{ entry.userId }}</td>
+          </ng-container>
+
+          <!-- Damage Dealt Column -->
+          <ng-container matColumnDef="damageDealt">
+            <th mat-header-cell *matHeaderCellDef>Damage</th>
+            <td mat-cell *matCellDef="let entry">
+              {{ entry.damageDealt | number:'1.0-0' }}
+            </td>
+          </ng-container>
+
+          <!-- Rarity Column -->
+          <ng-container matColumnDef="rarity">
+            <th mat-header-cell *matHeaderCellDef>Rarity</th>
+            <td mat-cell *matCellDef="let entry">
+              <mat-chip [style.background-color]="getRarityColor(entry.rarity)" [style.color]="'white'">
+                <span class="text-light">{{ entry.rarity }}</span>
+              </mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- Encounter Type Column -->
+          <ng-container matColumnDef="encounterType">
+            <th mat-header-cell *matHeaderCellDef>Type</th>
+            <td mat-cell *matCellDef="let entry">{{ entry.encounterType }}</td>
+          </ng-container>
+
+          <!-- Completed On Column -->
+          <ng-container matColumnDef="completedOn">
+            <th mat-header-cell *matHeaderCellDef>Completed</th>
+            <td mat-cell *matCellDef="let entry">
+              {{ entry.completedOn | date:'short' }}
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      </mat-card-content>
+    </mat-card>
+  </div>
+} @else {
+  <div class="no-data">
+    <mat-icon>info</mat-icon>
+    <p>No raid data available</p>
+  </div>
+}
