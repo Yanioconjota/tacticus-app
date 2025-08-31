@@ -8,11 +8,15 @@ import { AuthService } from '../../../core/services/auth.service';
 import { Router } from '@angular/router';
 import { ApiService } from '../../../core/services/api.service';
 import { Player } from '../../../core/models/player.model';
+import { GuildResponse } from '../../../core/models/guild.model';
+import { GuildInfoComponent } from './home-tabs/guild-info/guild-info.component';
+import { GuildRaid } from '../../../core/models/guild-raid.model';
+import { GuildRaidComponent } from './home-tabs/guild-raid/guild-raid.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [PlayerDashboardComponent, MatTabsModule, MatToolbarModule, MatIconModule, MatButtonModule],
+  imports: [PlayerDashboardComponent, MatTabsModule, MatToolbarModule, MatIconModule, MatButtonModule, GuildInfoComponent, GuildRaidComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
   encapsulation: ViewEncapsulation.None
@@ -27,9 +31,13 @@ export class HomeComponent implements OnInit {
   playerData = signal<Player | null>(null);
   isLoading = signal(false);
   errorMessage = signal<string | null>(null);
+  guildData = signal<GuildResponse | null>(null);
+  raidData = signal<GuildRaid | null>(null);
 
   ngOnInit(): void {
     this.loadPlayerData();
+    this.loadGuildData();
+    this.loadRaidData();
   }
 
   /**
@@ -42,6 +50,38 @@ export class HomeComponent implements OnInit {
     this.apiService.getPlayer().subscribe({
       next: (data) => {
         this.playerData.set(data);
+        this.isLoading.set(false);
+      },
+      error: (error) => {
+        this.errorMessage.set(error.message);
+        this.isLoading.set(false);
+      }
+    });
+  }
+
+  loadGuildData(): void {
+    this.isLoading.set(true);
+    this.errorMessage.set(null);
+
+    this.apiService.getGuild().subscribe({
+      next: (data) => {
+        this.guildData.set(data);
+        this.isLoading.set(false);
+      },
+      error: (error) => {
+        this.errorMessage.set(error.message);
+        this.isLoading.set(false);
+      }
+    });
+  }
+
+  loadRaidData(): void {
+    this.isLoading.set(true);
+    this.errorMessage.set(null);
+
+    this.apiService.getCurrentGuildRaid().subscribe({
+      next: (data) => {
+        this.raidData.set(data);
         this.isLoading.set(false);
       },
       error: (error) => {

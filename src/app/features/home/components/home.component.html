@@ -22,13 +22,13 @@
         <app-player-dashboard [playerData]="playerData()" [isLoading]="isLoading()" [errorMessage]="errorMessage()" [refreshData]="refreshData" />
       </mat-tab>
       <mat-tab label="Guild">
-        <div>Guild Data</div>
+        <app-guild-info [guildData]="guildData()" />
       </mat-tab>
       <mat-tab label="Current Raid">
-        <div>Current Raid Data</div>
+        <app-guild-raid [raidData]="raidData()" />
       </mat-tab>
       <mat-tab label="Raid by Season">
-        <div>Raid by Season Data</div>
+        <app-guild-raid [raidData]="raidData()" />
       </mat-tab>
     </mat-tab-group>
 
