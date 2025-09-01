@@ -1,4 +1,4 @@
-import { Component, input, computed, ViewChild, AfterViewInit, effect } from '@angular/core';
+import { Component, input, computed, ViewChild, AfterViewInit, effect, inject } from '@angular/core';
 import { GuildResponse } from '../../../../../core/models/guild.model';
 import { GuildMember } from '../../../../../core/models/player.model';
 import { MatCardModule } from '@angular/material/card';
@@ -8,6 +8,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
 import { DatePipe } from '@angular/common';
+import { FirebaseService } from '../../../../../core/services/firebase.service';
 
 @Component({
   selector: 'app-guild-info',
@@ -26,11 +27,17 @@ export class GuildInfoComponent implements AfterViewInit {
   // Table columns for members
   displayedColumns = ['name', 'level', 'role', 'lastActivityOn'];
 
+  private  firebaseService = inject(FirebaseService);
+
   constructor() {
     // Update data source when guild data changes
     effect(() => {
       const members = this.guildData()?.guild?.members || [];
       this.membersDataSource.data = members;
+    });
+
+    this.firebaseService.getAll('tacticus-users').then((data) => {
+      console.log(data);
     });
   }
 
@@ -47,7 +54,7 @@ export class GuildInfoComponent implements AfterViewInit {
     const officers = guild.members.filter(m => m.role === 'OFFICER').length;
     const members = guild.members.filter(m => m.role === 'MEMBER').length;
     const totalMembers = guild.members.length;
-    
+
     return {
       leaders,
       officers,
@@ -60,7 +67,7 @@ export class GuildInfoComponent implements AfterViewInit {
   averageLevel = computed(() => {
     const members = this.guildData()?.guild?.members;
     if (!members || members.length === 0) return 0;
-    
+
     const totalLevel = members.reduce((sum, member) => sum + member.level, 0);
     return Math.round(totalLevel / members.length);
   });
@@ -69,9 +76,9 @@ export class GuildInfoComponent implements AfterViewInit {
   activeMembers = computed(() => {
     const members = this.guildData()?.guild?.members;
     if (!members) return 0;
-    
+
     const sevenDaysAgo = Date.now() - (7 * 24 * 60 * 60 * 1000); // 7 days in milliseconds
-    
+
     return members.filter(member => {
       // Convert Unix timestamp (seconds) to milliseconds for comparison
       const lastActivityMs = member.lastActivityOn * 1000;

@@ -4,6 +4,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 import { AuthService } from '../../../core/services/auth.service';
 import { Router } from '@angular/router';
 import { ApiService } from '../../../core/services/api.service';
@@ -19,7 +20,7 @@ import { MatInputModule } from '@angular/material/input';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [PlayerDashboardComponent, MatTabsModule, MatToolbarModule, MatIconModule, MatButtonModule, GuildInfoComponent, GuildRaidComponent, LoadingComponent, MatFormFieldModule, MatInputModule, LoadingComponent],
+  imports: [PlayerDashboardComponent, MatTabsModule, MatToolbarModule, MatIconModule, MatButtonModule, MatCardModule, GuildInfoComponent, GuildRaidComponent, LoadingComponent, MatFormFieldModule, MatInputModule, LoadingComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
   encapsulation: ViewEncapsulation.None,
@@ -43,6 +44,10 @@ export class HomeComponent implements OnInit {
   // Computed signals for API key access
   hasOfficerAccess = computed(() =>
     this.authService.hasOfficerAccess()
+  );
+  
+  hasFirebaseAccess = computed(() =>
+    this.authService.hasFirebaseAccess()
   );
 
   ngOnInit(): void {
@@ -142,8 +147,8 @@ export class HomeComponent implements OnInit {
   /**
    * Logout user
    */
-  logout(): void {
-    this.authService.logout();
+  async logout(): Promise<void> {
+    await this.authService.logout();
     this.router.navigate(['/login']);
   }
 }

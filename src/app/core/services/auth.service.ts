@@ -1,4 +1,5 @@
-import { Injectable, signal, computed } from '@angular/core';
+import { Injectable, signal, computed, inject } from '@angular/core';
+import { FirebaseAuthService } from './firebase-auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -6,6 +7,7 @@ import { Injectable, signal, computed } from '@angular/core';
 export class AuthService {
   private readonly PLAYER_API_KEY = 'tacticus_player_api_key';
   private readonly OFFICER_API_KEY = 'tacticus_officer_api_key';
+  private firebaseAuthService = inject(FirebaseAuthService);
 
   // Signals for both API keys
   private playerApiKeySignal = signal<string | null>(null);
@@ -14,6 +16,9 @@ export class AuthService {
   // Computed signals for authentication state
   isAuthenticated = computed(() => !!this.playerApiKeySignal());
   hasOfficerAccess = computed(() => !!this.officerApiKeySignal());
+  hasFirebaseAccess = computed(() => 
+    this.hasOfficerAccess() && this.firebaseAuthService.isAuthenticated()
+  );
 
   // Getters for API keys
   get playerApiKey(): string | null {
@@ -62,12 +67,18 @@ export class AuthService {
 
   /**
    * Delete both API keys and clear the localStorage
+   * Also sign out from Firebase if authenticated
    */
-  logout(): void {
+  async logout(): Promise<void> {
     this.playerApiKeySignal.set(null);
     this.officerApiKeySignal.set(null);
     localStorage.removeItem(this.PLAYER_API_KEY);
     localStorage.removeItem(this.OFFICER_API_KEY);
+    
+    // Sign out from Firebase if authenticated
+    if (this.firebaseAuthService.isAuthenticated()) {
+      await this.firebaseAuthService.signOut();
+    }
   }
 
   /**

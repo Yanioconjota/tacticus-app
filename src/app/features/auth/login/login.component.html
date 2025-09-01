@@ -38,6 +38,17 @@
           </mat-checkbox>
         </div>
 
+        <!-- Firebase Access Toggle (only when officer is enabled) -->
+        @if (showOfficerField()) {
+          <div class="firebase-toggle">
+            <mat-checkbox
+              [checked]="useFirebaseAuth()"
+              (change)="onFirebaseAuthToggle()">
+              Use Firebase authentication for enhanced data
+            </mat-checkbox>
+          </div>
+        }
+
         <!-- Officer API Key (Optional) -->
         @if (showOfficerField()) {
           <mat-form-field appearance="outline" class="full-width">
@@ -61,6 +72,42 @@
           </mat-form-field>
         }
 
+        <!-- Firebase Authentication Fields (only when both officer and firebase are enabled) -->
+        @if (showOfficerField() && useFirebaseAuth()) {
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Firebase Email</mat-label>
+            <input
+              matInput
+              type="email"
+              [value]="firebaseEmail()"
+              (input)="onFirebaseEmailChange($any($event.target).value)"
+              placeholder="Enter your Firebase email"
+              [disabled]="isLoading()"
+              required>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Firebase Password</mat-label>
+            <input
+              matInput
+              [type]="showFirebasePassword() ? 'text' : 'password'"
+              [value]="firebasePassword()"
+              (input)="onFirebasePasswordChange($any($event.target).value)"
+              placeholder="Enter your Firebase password"
+              [disabled]="isLoading()"
+              required>
+            <button
+              mat-icon-button
+              matSuffix
+              type="button"
+              (click)="toggleFirebasePasswordVisibility()"
+              [attr.aria-label]="'Toggle password visibility'"
+              [attr.aria-pressed]="showFirebasePassword()">
+              <mat-icon>{{showFirebasePassword() ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+          </mat-form-field>
+        }
+
         @if (errorMessage()) {
           <div class="error-message">
             <mat-icon>error</mat-icon>
@@ -73,7 +120,7 @@
             mat-raised-button
             color="primary"
             type="submit"
-            [disabled]="isLoading() || !playerApiKey().trim()"
+            [disabled]="isLoading() || !isFormValid()"
             class="login-button">
             <ng-container>
               @if (isLoading()) {
@@ -92,7 +139,8 @@
     <mat-card-footer>
       <p class="help-text">
         <strong>Player API Key:</strong> Required for basic player data.<br>
-        <strong>Officer API Key:</strong> Optional, needed for guild and raid data.
+        <strong>Officer API Key:</strong> Optional, needed for guild and raid data.<br>
+        <strong>Firebase Auth:</strong> Optional, enables enhanced data when combined with Officer access.
       </p>
     </mat-card-footer>
   </mat-card>
